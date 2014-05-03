@@ -1,4 +1,6 @@
-all:jpd
+PROGS=new sujit
+
+all:$(PROGS)
 
 #%.o : %.d
 #        ghc $(CLG) -c -o $@ $<
@@ -6,3 +8,5 @@ all:jpd
 % : %.d
 	dmd -g $<
 
+clean:
+	-rm *.o $(PROGS)

@@ -3,6 +3,14 @@ import std.file;
 import std.string;
 import std.process;
 
+import std.c.linux.linux;
+extern(C) int setuid(uid_t uid);
+extern(C) uid_t getuid();
+
+void ffi() {
+
+}
+
 void doit(char[] fn) {
     writeln("doing it");
     string xxx="xxx.d";
