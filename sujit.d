@@ -1,38 +1,25 @@
 import std.stdio;
-import std.file;
-import std.string;
+import std.conv;
 import std.process;
-
 import std.c.linux.linux;
-extern(C) int setuid(uid_t uid);
-extern(C) uid_t getuid();
 
-void ffi() {
-
-}
-
-void doit(char[] fn) {
-    writeln("doing it");
-    string xxx="xxx.d";
-    if (exists(xxx)) remove(xxx);
-    system(format("ln -s %s.d %s", fn, xxx));
-}
-
-int main(string[] args) {
-    string s;
-    if (args.length != 2) {
-        writeln("Usage: new <fn[.d]>");
-        return 1;
+void main(string[] args) {
+    string user = to!string(getlogin());
+    if (user != "jerry") {
+        writeln("access denied");
+        return;
     }
-    char[] fn = cast(char[])args[1];
-    if (fn.length>2 && fn[fn.length-2 .. fn.length]==".d") fn.length-=2;
-    if (exists(fn~".d")) {
-        writef("%s already exists - do you want to relink (y/n)? ",fn~".d");
-        s=readln();
-        if (s[0]=='y') doit(fn);
-    } else {
-         system(format("echo 'import std.stdio;\n\nvoid main() {\n}' >>%s.d",fn));
-        doit(fn);
+    if (args.length<2) {
+        writef("Usage: sujit <command line>\n");
+        return;
     }
-    return 0;
+    if (geteuid() != 0) {
+        writeln("access denied");
+        return;
+    }
+    setuid(0);
+    setgid(0);
+    char[] cmd;
+    for (int i=1; i<args.length; i++) cmd ~= (" " ~ args[i]);
+    system(cmd.dup);
 }
