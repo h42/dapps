@@ -1,4 +1,4 @@
-PROGS=new sujit
+PROGS=new sujit jntp
 
 all:$(PROGS)
 
